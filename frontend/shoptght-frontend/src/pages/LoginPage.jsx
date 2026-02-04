@@ -15,30 +15,37 @@ const LoginPage = () => {
     setLoading(true);
     try {
       const response = await authApi.login(formData);
-      // Lấy token từ response (tùy cấu trúc backend trả về)
-      const token = response.token || response; 
+      
+      // --- SỬA ĐOẠN NÀY ---
+      // Backend mới trả về: { token: "...", user: { ... } }
+      
+      if (response.token) {
+        // 1. Lưu Token
+        localStorage.setItem('token', response.token);
 
-      if (token) {
-        localStorage.setItem('token', token);
+        // 2. Lưu User (QUAN TRỌNG: Để lấy email cho trang Lịch sử đơn)
+        if (response.user) {
+            localStorage.setItem('user', JSON.stringify(response.user));
+        }
+
+        // 3. Logic điều hướng
+        // Ưu tiên check role từ DB trả về, nếu không có thì check theo tên
+        const role = response.user?.role || (formData.username.toLowerCase().includes('admin') ? 'ADMIN' : 'USER');
         
-        // --- LOGIC PHÂN QUYỀN GIẢ LẬP ---
-        // Nếu username chứa chữ "admin" -> Lưu role ADMIN
-        // Ngược lại -> Lưu role USER
-        // (Sau này Backend trả về role thật thì sửa thành: response.role)
-        if (formData.username.toLowerCase().includes('admin')) {
-            localStorage.setItem('role', 'ADMIN');
+        localStorage.setItem('role', role);
+
+        if (role === 'ADMIN') {
             toast.success('Xin chào Quản trị viên!');
-            // Admin thì vào thẳng trang quản lý
             navigate('/admin/products'); 
         } else {
-            localStorage.setItem('role', 'USER');
             toast.success('Đăng nhập thành công!');
-            // User thì về trang chủ mua sắm
             navigate('/'); 
         }
       } else {
-        toast.error('Không nhận được token từ server');
+        toast.error('Lỗi phản hồi từ Server');
       }
+      // --------------------
+
     } catch (error) {
       console.error(error);
       toast.error('Sai tên đăng nhập hoặc mật khẩu!');

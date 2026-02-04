@@ -26,7 +26,13 @@ public class AuthConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests()
+                // Các API cũ (Đăng ký, đăng nhập, validate)
                 .requestMatchers("/auth/register", "/auth/token", "/auth/validate").permitAll()
+                
+                // --- MỚI THÊM: Cho phép truy cập các API quản lý User (Admin) ---
+                .requestMatchers("/auth/users/admin/**").permitAll()
+                // ---------------------------------------------------------------
+                
                 .anyRequest().authenticated()
                 .and()
                 .build();

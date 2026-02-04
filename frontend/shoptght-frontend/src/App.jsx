@@ -26,6 +26,10 @@ import Checkout from './pages/Checkout';
 import OrderSuccess from './pages/OrderSuccess';
 import PaymentPage from './pages/PaymentPage';
 import OrderManager from './pages/OrderManager';
+import PaymentManager from './pages/PaymentManager';
+import Dashboard from './pages/Dashboard';
+import MyOrders from './pages/MyOrders';
+
 
 function App() {
   return (
@@ -42,11 +46,12 @@ function App() {
 
           {/* --- ROUTE ADMIN --- */}
           <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Navigate to="/admin/products" />} />
+            <Route index element={<Dashboard />} />
             <Route path="products" element={<ProductList />} />
             <Route path="products/add" element={<ProductForm />} />
             <Route path="products/edit/:id" element={<ProductForm />} />
             <Route path="orders" element={<OrderManager />} />
+            <Route path="payments" element={<PaymentManager />} />
           </Route>
 
           {/* --- ROUTE CLIENT --- */}
@@ -64,6 +69,7 @@ function App() {
              <Route path="/checkout" element={<Checkout />} />
              <Route path="/order-success/:id" element={<OrderSuccess />} />
              <Route path="/payment/:orderId" element={<PaymentPage />} />
+             <Route path="/my-orders" element={<MyOrders />} />
              
              {/* Lưu ý: Nếu bạn click vào sản phẩm sẽ ra link /product/:id 
                  Hiện tại chưa có trang Chi tiết sản phẩm (ProductDetail), 

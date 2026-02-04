@@ -20,4 +20,5 @@ public class User {
     
     // Thêm Role để phân quyền (ví dụ: "ADMIN", "USER")
     private String role; 
+    
 }

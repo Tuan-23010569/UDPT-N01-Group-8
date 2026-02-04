@@ -1,12 +1,15 @@
 package com.shoptht.orderservice.service;
 
 import java.io.IOException;
+import java.time.LocalDate; 
 import java.util.List;
+import java.util.Map;       
+import java.util.TreeMap;   
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort; // <--- Import mới để sắp xếp
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +43,11 @@ public class OrderService {
         // Mặc định đơn mới là PENDING
         order.setStatus("PENDING"); 
 
+        // --- CẬP NHẬT PHẦN THANH TOÁN ---
+        order.setPaymentMethod(request.getPaymentMethod());
+        order.setPaymentStatus("UNPAID");
+        // --------------------------------
+
         // 2. Chuyển đổi DTO -> Entity (Items)
         List<OrderItem> items = request.getItems().stream().map(dto -> {
             OrderItem item = new OrderItem();
@@ -69,18 +77,53 @@ public class OrderService {
         pdfService.exportReceipt(response, order);
     }
 
-    // --- HÀM 3: ADMIN LẤY TẤT CẢ ĐƠN HÀNG (MỚI THÊM) ---
+    // --- HÀM 3: ADMIN LẤY TẤT CẢ ĐƠN HÀNG ---
     public List<Order> getAllOrders() {
-        // Sắp xếp theo ngày đặt (orderDate) giảm dần (DESC) -> Đơn mới nhất lên đầu
         return orderRepository.findAll(Sort.by(Sort.Direction.DESC, "orderDate"));
     }
 
-    // --- HÀM 4: ADMIN CẬP NHẬT TRẠNG THÁI (MỚI THÊM) ---
+    // --- HÀM 4: ADMIN CẬP NHẬT TRẠNG THÁI ĐƠN HÀNG ---
     public void updateOrderStatus(Long orderId, String newStatus) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng: " + orderId));
         
         order.setStatus(newStatus);
         orderRepository.save(order);
+    }
+
+    // --- HÀM 5: ADMIN CẬP NHẬT TRẠNG THÁI THANH TOÁN ---
+    public void updatePaymentStatus(Long orderId, String status) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng: " + orderId));
+        
+        order.setPaymentStatus(status);
+        orderRepository.save(order);
+    }
+
+    // --- HÀM 6: THỐNG KÊ DOANH THU CHO DASHBOARD ---
+    public Map<String, Double> getRevenueStats() {
+        List<Order> orders = orderRepository.findAll();
+        
+        // Dùng TreeMap để tự động sắp xếp key (ngày) tăng dần
+        Map<String, Double> stats = new TreeMap<>();
+
+        for (Order order : orders) {
+            // Kiểm tra null để tránh lỗi nếu dữ liệu cũ thiếu ngày
+            if (order.getOrderDate() != null) {
+                // Lấy ngày (yyyy-MM-dd)
+                String key = order.getOrderDate().toLocalDate().toString();
+                
+                // Cộng dồn tiền vào ngày đó
+                stats.put(key, stats.getOrDefault(key, 0.0) + order.getTotalAmount());
+            }
+        }
+        
+        return stats;
+    }
+
+    // --- HÀM 7: LẤY LỊCH SỬ ĐƠN HÀNG THEO EMAIL (MỚI THÊM) ---
+    // Hàm này được OrderController gọi để phục vụ chức năng "Đơn hàng của tôi"
+    public List<Order> getOrdersByEmail(String email) {
+        return orderRepository.findByCustomerEmailOrderByOrderDateDesc(email);
     }
 }

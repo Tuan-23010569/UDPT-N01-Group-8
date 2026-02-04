@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, LogOut, CreditCard } from 'lucide-react'; // 1. Import CreditCard
 import { toast } from 'react-toastify';
 
 const AdminLayout = () => {
@@ -26,10 +26,12 @@ const AdminLayout = () => {
     }
   };
 
+  // 2. Thêm mục Quản lý Thanh toán vào đây
   const menuItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
     { name: 'Quản lý Sản phẩm', icon: Package, path: '/admin/products' },
     { name: 'Đơn hàng', icon: ShoppingCart, path: '/admin/orders' },
+    { name: 'Quản lý Thanh toán', icon: CreditCard, path: '/admin/payments' }, // <--- Mới thêm
   ];
 
   return (
@@ -43,7 +45,10 @@ const AdminLayout = () => {
         <nav className="flex-1 p-4 space-y-2">
           {menuItems.map((item) => {
             // Kiểm tra active cho cả đường dẫn con (VD: /admin/products/add vẫn sáng nút Sản phẩm)
-            const isActive = location.pathname.startsWith(item.path) && (item.path !== '/admin' || location.pathname === '/admin');
+            // Logic: path hiện tại bắt đầu bằng path menu VÀ xử lý riêng cho Dashboard (/) tránh trùng
+            const isActive = item.path === '/admin' 
+                ? location.pathname === '/admin'
+                : location.pathname.startsWith(item.path);
             
             return (
               <Link
@@ -77,8 +82,8 @@ const AdminLayout = () => {
         <header className="h-16 bg-white shadow-sm flex items-center px-8 justify-between sticky top-0 z-10 shrink-0">
           <h2 className="text-lg font-bold text-gray-700">Hệ thống quản trị</h2>
           <div className="flex items-center gap-4">
-             <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold shadow-md">A</div>
-             <span className="text-sm font-medium text-gray-600">Admin User</span>
+              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold shadow-md">A</div>
+              <span className="text-sm font-medium text-gray-600">Admin User</span>
           </div>
         </header>
         <div className="p-8 flex-1">

@@ -105,7 +105,7 @@ const ClientLayout = () => {
                           <Link to="/vouchers" className="flex flex-col items-center justify-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg text-center gap-1 transition-colors">
                               <Ticket size={24} className="mb-1 text-gray-700"/> <span className="text-xs font-bold text-gray-700">Ví Voucher</span>
                           </Link>
-                          <Link to="/orders" className="flex flex-col items-center justify-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg text-center gap-1 transition-colors">
+                          <Link to="/my-orders" className="flex flex-col items-center justify-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg text-center gap-1 transition-colors">
                               <History size={24} className="mb-1 text-gray-700"/> <span className="text-xs font-bold text-gray-700">Lịch sử đơn</span>
                           </Link>
                           <Link to="/address" className="flex flex-col items-center justify-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg text-center gap-1 transition-colors">
