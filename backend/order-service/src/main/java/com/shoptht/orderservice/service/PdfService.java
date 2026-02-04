@@ -32,11 +32,11 @@ public class PdfService {
         Font fontSmall = new Font(bf, 8, Font.ITALIC);
 
         // --- HEADER ---
-        Paragraph shopName = new Paragraph("COOLMATE STORE", fontTitle);
+        Paragraph shopName = new Paragraph("THT STORE", fontTitle);
         shopName.setAlignment(Element.ALIGN_CENTER);
         document.add(shopName);
 
-        Paragraph address = new Paragraph("123 Nguyen Trai, Ha Noi\nTel: 1900 272737", fontNormal);
+        Paragraph address = new Paragraph("Phenikaa, Ha Noi\nTel: 1900 272737", fontNormal);
         address.setAlignment(Element.ALIGN_CENTER);
         document.add(address);
 
