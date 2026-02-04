@@ -1,10 +1,20 @@
 package com.shoptht.orderservice.dto;
 
-import lombok.Data;
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class OrderRequest {
-    private Long userId;
-    private List<OrderItemRequest> items;
+    private String customerName;
+    private String customerEmail;
+    private List<OrderItemDto> items;
+
+    @Data
+    public static class OrderItemDto {
+        private String productCode;
+        private String productName;
+        private Double price;
+        private Integer quantity;
+    }
 }

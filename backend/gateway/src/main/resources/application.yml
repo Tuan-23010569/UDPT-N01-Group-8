@@ -16,8 +16,16 @@ spring:
           
         # Route 2: Product Service (Có chặn Filter)
         - id: product-service
-          uri: http://localhost:8081 # Giả sử product chạy port 8081
+          uri: http://localhost:8081 
           predicates:
             - Path=/products/**, /categories/**
           filters:
-            - AuthenticationFilter # Tên class Filter của bạn
+            - AuthenticationFilter
+            
+        # Route 3: Order Service (MỚI - Có chặn Filter)
+        - id: order-service
+          uri: http://localhost:8083  # Port của Order Service
+          predicates:
+            - Path=/api/orders/** # Khớp với đường dẫn Controller bên Order
+          filters:
+            - AuthenticationFilter    # Filter sẽ kiểm tra Token (trừ khi nằm trong whitelist RouteValidator)

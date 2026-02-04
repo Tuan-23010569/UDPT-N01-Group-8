@@ -1,10 +1,10 @@
 package com.shoptht.gateway.filter;
 
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.function.Predicate;
+
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.stereotype.Component;
 
 @Component
 public class RouteValidator {
@@ -15,12 +15,11 @@ public class RouteValidator {
             "/auth/token",
             "/auth/validate",
             "/eureka",
-            "/products",           // <--- THÊM DÒNG NÀY (Cho phép xem danh sách)
-            "/products/search",    // <--- THÊM DÒNG NÀY (Cho phép tìm kiếm)
-            "/products/filter"     // <--- THÊM DÒNG NÀY (Cho phép lọc)
-            // Lưu ý: Nếu muốn cho phép POST/PUT/DELETE (Admin) mà không cần token
-            // thì thêm "/products" là đủ, nhưng thực tế Admin nên cần Token.
-            // Ở giai đoạn dev này, ta tạm mở ra để test.
+            "/products",    
+            "/products/search",    
+            "/products/filter",
+            "/api/orders/place",
+            "/api/orders/invoice"
     );
 
     public Predicate<ServerHttpRequest> isSecured =
