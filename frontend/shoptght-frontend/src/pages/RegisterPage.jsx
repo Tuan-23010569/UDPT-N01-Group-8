@@ -47,7 +47,7 @@ const RegisterPage = () => {
         
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Tạo tài khoản mới</h1>
-          <p className="text-gray-500 text-sm mt-1">Gia nhập đội ngũ Coolmate Admin</p>
+          <p className="text-gray-500 text-sm mt-1">Gia nhập đội ngũ ShopTHT Admin</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

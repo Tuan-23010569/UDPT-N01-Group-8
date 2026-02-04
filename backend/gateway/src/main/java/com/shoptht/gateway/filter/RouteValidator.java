@@ -17,7 +17,10 @@ public class RouteValidator {
             "/eureka",
             "/products",           // <--- THÊM DÒNG NÀY (Cho phép xem danh sách)
             "/products/search",    // <--- THÊM DÒNG NÀY (Cho phép tìm kiếm)
-            "/products/filter"     // <--- THÊM DÒNG NÀY (Cho phép lọc)
+            "/products/filter" ,
+            "/categories" ,
+            "/payments/vn-pay-callback", 
+                "/payments/ipn"   // <--- THÊM DÒNG NÀY (Cho phép lọc)
             // Lưu ý: Nếu muốn cho phép POST/PUT/DELETE (Admin) mà không cần token
             // thì thêm "/products" là đủ, nhưng thực tế Admin nên cần Token.
             // Ở giai đoạn dev này, ta tạm mở ra để test.

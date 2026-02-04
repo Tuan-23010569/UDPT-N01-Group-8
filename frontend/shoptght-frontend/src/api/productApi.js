@@ -1,32 +1,32 @@
 import axiosClient from './axiosClient';
 
 const productApi = {
-  // Lấy tất cả
+  // --- PRODUCT API ---
   getAll() {
     return axiosClient.get('/products');
   },
-  // Lấy chi tiết 1 cái (để sửa)
   getById(id) {
-    return axiosClient.get(`/products/${id}`); // Bạn cần đảm bảo Backend có API này
+    return axiosClient.get(`/products/${id}`);
   },
-  // Thêm mới
   create(data) {
     return axiosClient.post('/products', data);
   },
-  // Cập nhật
   update(id, data) {
     return axiosClient.put(`/products/${id}`, data);
   },
-  // Xóa
   delete(id) {
     return axiosClient.delete(`/products/${id}`);
   },
   filter(params) {
-    // params là object chứa: { minPrice, maxPrice, color, size, categoryId }
     return axiosClient.get('/products/filter', { params });
   },
   search(keyword) {
     return axiosClient.get(`/products/search?keyword=${keyword}`);
+  },
+
+  // --- CATEGORY API (GỘP CHUNG VÀO ĐÂY) ---
+  getAllCategories() {
+    return axiosClient.get('/categories'); // Đảm bảo Backend có API này
   }
 };
 

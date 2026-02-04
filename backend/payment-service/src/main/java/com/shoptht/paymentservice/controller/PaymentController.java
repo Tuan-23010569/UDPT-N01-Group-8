@@ -11,7 +11,7 @@ import com.shoptht.paymentservice.entity.Payment;
 import com.shoptht.paymentservice.service.PaymentService;
 
 @RestController
-@RequestMapping("/api/payments")
+@RequestMapping("/payments")
 public class PaymentController {
 
     @Autowired

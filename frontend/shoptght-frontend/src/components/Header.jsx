@@ -99,8 +99,8 @@ const Header = () => {
                    <div className="mb-1">
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2V22M2 12H22" stroke="black" strokeWidth="5" strokeLinecap="round"/></svg>
                    </div>
-                   <span className="text-[26px] font-black tracking-tighter text-black">COOL</span>
-                   <span className="bg-black text-white text-[18px] font-bold px-[4px] rounded-[2px] mb-[3px]">MATE</span>
+                   <span className="text-[26px] font-black tracking-tighter text-black">SHOP</span>
+                   <span className="bg-black text-white text-[18px] font-bold px-[4px] rounded-[2px] mb-[3px]">THT</span>
                 </div>
             </Link>
           </div>

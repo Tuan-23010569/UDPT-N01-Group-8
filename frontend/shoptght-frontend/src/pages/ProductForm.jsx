@@ -6,36 +6,60 @@ import { ArrowLeft, Plus, Trash, Save } from 'lucide-react';
 
 const ProductForm = () => {
   const navigate = useNavigate();
-  const { id } = useParams(); // Nếu có id là Edit, không có là Add
+  const { id } = useParams();
   const isEdit = !!id;
+
+  // 1. State lưu danh sách danh mục để hiển thị Dropdown
+  const [categories, setCategories] = useState([]);
 
   // State quản lý form
   const [product, setProduct] = useState({
     name: '',
     description: '',
-    categoryId: '', // Backend cần ID danh mục (Long)
+    categoryId: '', // Sẽ lưu ID được chọn từ Dropdown
     variants: [
-      { color: '', size: '', price: 0, quantity: 10, imageUrl: '' } // Mặc định 1 biến thể
+      { color: '', size: '', price: 0, quantity: 10, imageUrl: '' }
     ]
   });
 
-  // Load dữ liệu khi Edit
+  // Load dữ liệu ban đầu (Danh mục + Sản phẩm nếu Edit)
   useEffect(() => {
+    // A. Tải danh sách danh mục
+    const loadCategories = async () => {
+      try {
+        // Gọi hàm gộp trong productApi
+        const res = await productApi.getAllCategories();
+        // Kiểm tra dữ liệu trả về (mảng hay object bọc data)
+        const data = Array.isArray(res) ? res : (res.data || []);
+        setCategories(data);
+      } catch (error) {
+        console.error("Lỗi tải danh mục:", error);
+        // Không chặn luồng chính, chỉ log lỗi
+      }
+    };
+    loadCategories();
+
+    // B. Tải thông tin sản phẩm (Nếu đang Edit)
     if (isEdit) {
       const loadProduct = async () => {
          try {
-             // Lưu ý: Backend cần có API GetById trả về đúng cấu trúc
-             // Nếu chưa có, bạn chỉ có thể test chức năng THÊM MỚI
-             // const data = await productApi.getById(id);
-             // setProduct(data);
-             toast.info("Chức năng edit đang chờ API GetById từ backend");
+             const data = await productApi.getById(id);
+             
+             // Xử lý lấy ID danh mục từ dữ liệu trả về
+             // Backend có thể trả về object category {id: 1, name: '...'} hoặc field categoryId
+             const catId = data.category ? data.category.id : (data.categoryId || '');
+
+             setProduct({
+                 ...data,
+                 categoryId: catId
+             });
          } catch (err) {
              toast.error("Không tìm thấy sản phẩm");
          }
       };
       loadProduct();
     }
-  }, [id]);
+  }, [id, isEdit]);
 
   // Xử lý thay đổi input cơ bản
   const handleChange = (e) => {
@@ -59,7 +83,7 @@ const ProductForm = () => {
 
   // Xóa dòng biến thể
   const removeVariant = (index) => {
-    if (product.variants.length === 1) return; // Giữ lại ít nhất 1 dòng
+    if (product.variants.length === 1) return;
     const newVariants = product.variants.filter((_, i) => i !== index);
     setProduct({ ...product, variants: newVariants });
   };
@@ -68,7 +92,7 @@ const ProductForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Convert categoryId sang số (nếu nhập string)
+      // Đảm bảo categoryId là số nguyên (hoặc null)
       const payload = {
           ...product,
           categoryId: product.categoryId ? parseInt(product.categoryId) : null
@@ -84,7 +108,7 @@ const ProductForm = () => {
       navigate('/admin/products');
     } catch (error) {
       console.error(error);
-      toast.error('Có lỗi xảy ra! Kiểm tra lại dữ liệu.');
+      toast.error('Có lỗi xảy ra! Vui lòng kiểm tra lại.');
     }
   };
 
@@ -104,10 +128,30 @@ const ProductForm = () => {
                 <label className="block text-sm font-medium mb-1">Tên sản phẩm</label>
                 <input required name="name" value={product.name} onChange={handleChange} className="w-full border p-2 rounded focus:ring-2 ring-blue-500 outline-none" placeholder="Ví dụ: Áo thun Coolmate" />
              </div>
+             
+             {/* --- THAY ĐỔI: DROPDOWN DANH MỤC --- */}
              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium mb-1">Category ID</label>
-                <input type="number" name="categoryId" value={product.categoryId} onChange={handleChange} className="w-full border p-2 rounded focus:ring-2 ring-blue-500 outline-none" placeholder="Nhập ID danh mục (VD: 1)" />
+                <label className="block text-sm font-medium mb-1">Danh mục</label>
+                <select 
+                    name="categoryId" 
+                    value={product.categoryId} 
+                    onChange={handleChange} 
+                    required
+                    className="w-full border p-2 rounded focus:ring-2 ring-blue-500 outline-none bg-white"
+                >
+                    <option value="">-- Chọn danh mục --</option>
+                    {categories.length > 0 ? (
+                        categories.map((cat) => (
+                            <option key={cat.id} value={cat.id}>
+                                {cat.name}
+                            </option>
+                        ))
+                    ) : (
+                        <option disabled>Đang tải danh mục...</option>
+                    )}
+                </select>
              </div>
+
              <div className="col-span-2">
                 <label className="block text-sm font-medium mb-1">Mô tả</label>
                 <textarea name="description" value={product.description} onChange={handleChange} className="w-full border p-2 rounded focus:ring-2 ring-blue-500 outline-none h-24" placeholder="Mô tả chi tiết..." />
@@ -116,7 +160,7 @@ const ProductForm = () => {
 
           <hr className="border-gray-100"/>
 
-          {/* Quản lý Biến thể (Dynamic Form) */}
+          {/* Quản lý Biến thể */}
           <div>
             <div className="flex justify-between items-center mb-3">
                <h3 className="font-bold text-lg">Biến thể sản phẩm (Màu/Size)</h3>

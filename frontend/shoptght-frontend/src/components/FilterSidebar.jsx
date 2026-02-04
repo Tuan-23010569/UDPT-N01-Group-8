@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
+// Component con để tạo Accordion (Đóng/Mở)
 const FilterSection = ({ title, children, defaultOpen = true }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   return (
@@ -16,20 +17,27 @@ const FilterSection = ({ title, children, defaultOpen = true }) => {
   );
 };
 
-// Nhận prop onFilterChange từ cha
 const FilterSidebar = ({ onFilterChange }) => {
   
-  // Xử lý khi chọn Size
+  // --- CÁC HÀM XỬ LÝ LỌC ---
+
+  // 1. Lọc theo Nhóm sản phẩm (Category ID)
+  // ID này phải khớp với ID bạn đã Insert vào Database
+  const handleCategoryClick = (id) => {
+      onFilterChange({ categoryId: id });
+  };
+
+  // 2. Lọc theo Size
   const handleSizeClick = (size) => {
     onFilterChange({ size: size });
   };
 
-  // Xử lý khi chọn Màu
+  // 3. Lọc theo Màu
   const handleColorClick = (colorName) => {
     onFilterChange({ color: colorName });
   };
 
-  // Xử lý khi chọn Giá
+  // 4. Lọc theo Giá
   const handlePriceChange = (val) => {
     if (!val) {
         onFilterChange({ minPrice: null, maxPrice: null });
@@ -44,20 +52,49 @@ const FilterSidebar = ({ onFilterChange }) => {
 
   return (
     <div className="w-full pr-4">
+      {/* Header & Reset Button */}
       <div className="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
          <span className="font-bold text-lg">Bộ lọc</span>
          <button 
-            onClick={() => onFilterChange({ size: null, color: null, minPrice: null, maxPrice: null })}
+            onClick={() => onFilterChange({ categoryId: null, size: null, color: null, minPrice: null, maxPrice: null })}
             className="text-xs text-gray-400 hover:text-blue-600 hover:underline"
          >
             Xóa tất cả
          </button>
       </div>
 
-      {/* 1. Kích cỡ */}
+      {/* --- PHẦN 1: NHÓM SẢN PHẨM (MỚI THÊM) --- */}
+      <FilterSection title="Nhóm sản phẩm">
+         {[
+            { name: 'Áo Thun', id: 2 },
+            { name: 'Áo Polo', id: 6 },
+            { name: 'Áo Sơ Mi', id: 5 },
+            { name: 'Áo Tanktop', id: 13 },
+            { name: 'Áo Khoác', id: 14 },
+            { name: 'Quần Short', id: 3 },
+            { name: 'Quần Jeans', id: 21 },
+            { name: 'Quần Jogger', id: 23 },
+            { name: 'Quần Lót', id: 4 },
+            { name: 'Tất/Vớ & Phụ kiện', id: 30 },
+         ].map((item) => (
+            <label key={item.id} className="flex items-center gap-3 cursor-pointer group hover:bg-gray-50 p-1 rounded -ml-1">
+               <input 
+                  type="radio" 
+                  name="category" // Dùng radio để chỉ chọn 1 loại 1 lúc (tránh xung đột logic đơn giản)
+                  className="w-4 h-4 accent-black cursor-pointer" 
+                  onChange={() => handleCategoryClick(item.id)}
+               />
+               <span className="text-sm text-gray-600 group-hover:text-blue-600 transition-colors font-medium">
+                  {item.name}
+               </span>
+            </label>
+         ))}
+      </FilterSection>
+
+      {/* --- PHẦN 2: KÍCH CỠ --- */}
       <FilterSection title="Kích cỡ">
          <div className="grid grid-cols-4 gap-2">
-            {['S', 'M', 'L', 'XL', '2XL'].map((size) => (
+            {['S', 'M', 'L', 'XL', '2XL', '3XL'].map((size) => (
                <button 
                   key={size} 
                   onClick={() => handleSizeClick(size)}
@@ -69,14 +106,18 @@ const FilterSidebar = ({ onFilterChange }) => {
          </div>
       </FilterSection>
 
-      {/* 2. Màu sắc */}
+      {/* --- PHẦN 3: MÀU SẮC --- */}
       <FilterSection title="Màu sắc">
          <div className="flex flex-wrap gap-3">
             {[
                {hex: '#000000', name: 'Đen'}, 
                {hex: '#FFFFFF', name: 'Trắng', border: true}, 
-               {hex: '#1e3a8a', name: 'Xanh'}, // Lưu ý: Tên phải khớp DB (Ví dụ DB là 'Xanh' chứ không phải 'Xanh Navy')
-               {hex: '#dc2626', name: 'Đỏ'}
+               {hex: '#1e3a8a', name: 'Xanh'}, 
+               {hex: '#172554', name: 'Xanh Navy'},
+               {hex: '#4b5563', name: 'Xám'},
+               {hex: '#dc2626', name: 'Đỏ'},
+               {hex: '#ca8a04', name: 'Vàng'},
+               {hex: '#166534', name: 'Xanh rêu'}
             ].map((c, idx) => (
                <div key={idx} className="group relative" onClick={() => handleColorClick(c.name)}>
                   <div 
@@ -91,7 +132,7 @@ const FilterSidebar = ({ onFilterChange }) => {
          </div>
       </FilterSection>
 
-      {/* 3. Mức giá */}
+      {/* --- PHẦN 4: MỨC GIÁ --- */}
       <FilterSection title="Mức giá">
           {[
              { label: 'Dưới 100k', val: '0-100000' },
@@ -99,7 +140,7 @@ const FilterSidebar = ({ onFilterChange }) => {
              { label: '200k - 500k', val: '200000-500000' },
              { label: 'Trên 500k', val: '500000-MAX' }
           ].map((price, idx) => (
-             <label key={idx} className="flex items-center gap-3 cursor-pointer group">
+             <label key={idx} className="flex items-center gap-3 cursor-pointer group hover:bg-gray-50 p-1 rounded -ml-1">
                 <input 
                     type="radio" 
                     name="price" 
