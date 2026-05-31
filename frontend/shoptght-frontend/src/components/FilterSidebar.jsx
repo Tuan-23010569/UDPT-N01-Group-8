@@ -69,13 +69,13 @@ const FilterSidebar = ({ onFilterChange }) => {
             { name: 'Áo Thun', id: 2 },
             { name: 'Áo Polo', id: 6 },
             { name: 'Áo Sơ Mi', id: 5 },
-            { name: 'Áo Tanktop', id: 13 },
-            { name: 'Áo Khoác', id: 14 },
+            { name: 'Áo Tanktop', id: 8 },
+            { name: 'Áo Khoác', id: 7 },
             { name: 'Quần Short', id: 3 },
-            { name: 'Quần Jeans', id: 21 },
-            { name: 'Quần Jogger', id: 23 },
+            { name: 'Quần Jeans', id: 9 },
+            { name: 'Quần Jogger', id: 10 },
             { name: 'Quần Lót', id: 4 },
-            { name: 'Tất/Vớ & Phụ kiện', id: 30 },
+            { name: 'Tất/Vớ & Phụ kiện', id: 11 },
          ].map((item) => (
             <label key={item.id} className="flex items-center gap-3 cursor-pointer group hover:bg-gray-50 p-1 rounded -ml-1">
                <input 

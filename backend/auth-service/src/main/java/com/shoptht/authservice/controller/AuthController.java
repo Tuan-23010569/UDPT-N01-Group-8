@@ -9,6 +9,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;
 import java.util.List;
@@ -74,19 +76,20 @@ public class AuthController {
 
     // Khóa / Mở khóa tài khoản
     @PutMapping("/users/admin/{id}/lock")
-    public String toggleLockUser(@PathVariable int id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        
-        // Đảo ngược trạng thái khóa (True -> False, False -> True)
-        // Giả sử Entity User của bạn có trường 'locked'. 
-        // Nếu chưa có, bạn cần thêm private boolean locked; vào entity User
-        // user.setLocked(!user.isLocked()); 
-        // userRepository.save(user);
-        
-        // TẠM THỜI COMMENT LẠI NẾU ENTITY USER CHƯA CÓ TRƯỜNG LOCKED
-        // ĐỂ TRÁNH LỖI COMPILE KHI BẠN CHẠY
-        
-        return "Tính năng đang cập nhật (Cần thêm field locked vào Entity User)";
+    public ResponseEntity<?> toggleLockUser(@PathVariable int id) {
+        try {
+            User user = userRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            // Đảo ngược trạng thái khóa
+            user.setLocked(!user.isLocked());
+            userRepository.save(user);
+
+            return ResponseEntity.ok(user.isLocked() ? "Tài khoản đã được khóa." : "Tài khoản đã được mở khóa.");
+        } catch (Exception e) {
+            e.printStackTrace(); // In lỗi ra terminal của backend để dễ debug
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Lỗi Server: " + e.getMessage() + " (Vui lòng xem log ở Backend)");
+        }
     }
 }

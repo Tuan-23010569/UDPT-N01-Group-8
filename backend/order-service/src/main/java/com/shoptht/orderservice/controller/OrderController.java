@@ -73,7 +73,9 @@ public class OrderController {
     // URL: GET http://localhost:8080/orders/history?email=khach@gmail.com
     // Sử dụng @RequestParam để tránh lỗi khi email có dấu chấm (.)
     @GetMapping("/history")
-    public List<Order> getMyOrders(@RequestParam("email") String email) {
-        return orderService.getOrdersByEmail(email);
+    public List<Order> getMyOrders(
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "name", required = false) String name) {
+        return orderService.getOrdersByUser(email, name);
     }
 }

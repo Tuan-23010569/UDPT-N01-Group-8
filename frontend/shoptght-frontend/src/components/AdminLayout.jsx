@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, LogOut, CreditCard } from 'lucide-react'; // 1. Import CreditCard
+import { LayoutDashboard, Package, ShoppingCart, LogOut, CreditCard, MessageSquare, Users } from 'lucide-react'; 
 import { toast } from 'react-toastify';
 
 const AdminLayout = () => {
@@ -32,6 +32,8 @@ const AdminLayout = () => {
     { name: 'Quản lý Sản phẩm', icon: Package, path: '/admin/products' },
     { name: 'Đơn hàng', icon: ShoppingCart, path: '/admin/orders' },
     { name: 'Quản lý Thanh toán', icon: CreditCard, path: '/admin/payments' }, // <--- Mới thêm
+    { name: 'Bình luận', icon: MessageSquare, path: '/admin/reviews' }, // <--- Menu Bình luận
+    { name: 'Khách hàng', icon: Users, path: '/admin/customers' },
   ];
 
   return (

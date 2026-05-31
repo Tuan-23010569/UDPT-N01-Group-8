@@ -20,5 +20,8 @@ public class User {
     
     // Thêm Role để phân quyền (ví dụ: "ADMIN", "USER")
     private String role; 
+
+    // Thêm trường để khóa tài khoản
+    private boolean locked = false;
     
 }

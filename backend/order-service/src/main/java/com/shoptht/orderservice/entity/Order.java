@@ -10,9 +10,11 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "t_orders")
@@ -24,6 +26,7 @@ public class Order {
     private String orderNumber;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_id") // Báo cho DB biết dùng cột khóa ngoại thay vì tạo bảng trung gian
     private List<OrderItem> orderItems = new ArrayList<>(); 
     
     private String phone;
@@ -38,5 +41,6 @@ public class Order {
     private String paymentStatus; // VD: UNPAID, PAID
     // -------------------------------
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // Giúp Jackson dịch thời gian mượt mà
     private LocalDateTime orderDate = LocalDateTime.now();
 }

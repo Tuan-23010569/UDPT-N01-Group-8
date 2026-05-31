@@ -11,6 +11,7 @@ const CustomerManager = () => {
   const [loading, setLoading] = useState(true);
 
   // Load danh sách
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchUsers();
   }, []);

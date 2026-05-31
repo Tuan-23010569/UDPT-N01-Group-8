@@ -15,7 +15,7 @@ public class CorsConfig {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
         
-        // 1. Cho phép Frontend (Port 5173) gọi vào
+        // 1. Cho phép Frontend (Port 5174) gọi vào
         corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
         
         // 2. Cho phép mọi Method (GET, POST, PUT, DELETE...)

@@ -16,6 +16,7 @@ public class CustomUserDetails implements UserDetails {
     private String name;
     private String password;
     private List<GrantedAuthority> authorities;
+    private boolean locked;
 
     public CustomUserDetails(User user) {
         this.name = user.getName();
@@ -24,6 +25,7 @@ public class CustomUserDetails implements UserDetails {
         this.authorities = Arrays.stream(user.getRole().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+        this.locked = user.isLocked();
     }
 
     @Override
@@ -35,7 +37,7 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isAccountNonExpired() { return true; }
     @Override
-    public boolean isAccountNonLocked() { return true; }
+    public boolean isAccountNonLocked() { return !locked; } // Nếu bị khóa sẽ trả về false, Spring chặn đăng nhập
     @Override
     public boolean isCredentialsNonExpired() { return true; }
     @Override

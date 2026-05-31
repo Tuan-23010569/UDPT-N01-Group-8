@@ -69,4 +69,11 @@ public class ProductController {
         productService.deleteProduct(id);
         return "Product Deleted Successfully";
     }
+
+    // 7. Lấy chi tiết sản phẩm theo ID (Fix lỗi 405)
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductResponse getProductById(@PathVariable("id") Long id) {
+        return productService.getProductById(id);
+    }
 }

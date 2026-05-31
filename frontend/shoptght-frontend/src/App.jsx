@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -29,6 +29,10 @@ import OrderManager from './pages/OrderManager';
 import PaymentManager from './pages/PaymentManager';
 import Dashboard from './pages/Dashboard';
 import MyOrders from './pages/MyOrders';
+import ProductDetail from './pages/ProductDetail';
+import ReviewManager from './pages/ReviewManager';
+import CustomerManager from './pages/CustomerManager';
+import Chatbox from './components/Chatbox'; // <--- Thêm import Chatbox
 
 
 function App() {
@@ -38,6 +42,9 @@ function App() {
       <BrowserRouter>
         {/* 2. ToastContainer để hiển thị thông báo (z-index cao nhất) */}
         <ToastContainer position="top-right" autoClose={3000} />
+
+        {/* 3. AI Chatbox toàn cục */}
+        <Chatbox />
 
         <Routes>
           {/* --- ROUTE AUTH --- */}
@@ -52,6 +59,8 @@ function App() {
             <Route path="products/edit/:id" element={<ProductForm />} />
             <Route path="orders" element={<OrderManager />} />
             <Route path="payments" element={<PaymentManager />} />
+            <Route path="reviews" element={<ReviewManager />} />
+            <Route path="customers" element={<CustomerManager />} />
           </Route>
 
           {/* --- ROUTE CLIENT --- */}
@@ -71,10 +80,7 @@ function App() {
              <Route path="/payment/:orderId" element={<PaymentPage />} />
              <Route path="/my-orders" element={<MyOrders />} />
              
-             {/* Lưu ý: Nếu bạn click vào sản phẩm sẽ ra link /product/:id 
-                 Hiện tại chưa có trang Chi tiết sản phẩm (ProductDetail), 
-                 bạn có thể thêm sau nhé.
-             */}
+             <Route path="/product/:id" element={<ProductDetail />} />
           </Route>
 
         </Routes>

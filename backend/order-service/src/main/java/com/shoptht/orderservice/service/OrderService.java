@@ -1,7 +1,7 @@
 package com.shoptht.orderservice.service;
 
 import java.io.IOException;
-import java.time.LocalDate; 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;       
 import java.util.TreeMap;   
@@ -40,6 +40,9 @@ public class OrderService {
         order.setCustomerEmail(request.getCustomerEmail()); 
         order.setPhone(request.getPhone());
         
+        // MỚI THÊM: Gán ngày đặt hàng hiện tại. Tránh lỗi NULL khi hiển thị lịch sử
+        order.setOrderDate(LocalDateTime.now());
+
         // Mặc định đơn mới là PENDING
         order.setStatus("PENDING"); 
 
@@ -123,7 +126,7 @@ public class OrderService {
 
     // --- HÀM 7: LẤY LỊCH SỬ ĐƠN HÀNG THEO EMAIL (MỚI THÊM) ---
     // Hàm này được OrderController gọi để phục vụ chức năng "Đơn hàng của tôi"
-    public List<Order> getOrdersByEmail(String email) {
-        return orderRepository.findByCustomerEmailOrderByOrderDateDesc(email);
+    public List<Order> getOrdersByUser(String email, String name) {
+        return orderRepository.findByCustomerEmailOrCustomerNameOrderByOrderDateDesc(email, name);
     }
 }

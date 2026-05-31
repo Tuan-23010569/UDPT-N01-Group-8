@@ -1,0 +1,107 @@
+@startuml
+title KIẾN TRÚC TỔNG THỂ HỆ THỐNG PHÂN TÁN (Microservices)
+
+'=====================
+' STYLE
+'=====================
+skinparam shadowing false
+skinparam roundcorner 18
+skinparam defaultFontName Arial
+skinparam defaultTextAlignment center
+skinparam ArrowThickness 1.2
+left to right direction
+
+'=====================
+' CLIENTS
+'=====================
+actor "Customer" as customer
+actor "Admin" as admin
+
+node "Frontend\n(Web / Mobile)" as FE #E3F2FD
+cloud "Internet" as NET
+
+customer --> NET
+admin --> NET
+NET --> FE
+
+'=====================
+' GATEWAY
+'=====================
+node "API Gateway\n(Spring Cloud Gateway)" as GW #D1C4E9
+FE --> GW : HTTPS REST API
+
+note right of GW
+Gateway:
+- Routing
+- JWT Filter
+- CORS
+- Rate limit
+end note
+
+'=====================
+' MICROSERVICES
+'=====================
+package "Microservices" {
+
+  node "Auth Service" as AUTH #FFEBEE
+  database "Auth DB\n(MySQL)" as AUTH_DB #FFF8E1
+
+  node "Product Service" as PRODUCT #E8F5E9
+  database "Product DB\n(MySQL)" as PRODUCT_DB #FFF8E1
+
+  node "Order Service" as ORDER #FFF3E0
+  database "Order DB\n(MySQL)" as ORDER_DB #FFF8E1
+
+  node "Payment Service" as PAYMENT #E0F7FA
+  database "Payment DB\n(MySQL)" as PAYMENT_DB #FFF8E1
+}
+
+'=====================
+' ROUTES (Gateway -> Services)
+'=====================
+GW --> AUTH : /auth/**
+GW --> PRODUCT : /products/**
+GW --> ORDER : /orders/**
+GW --> PAYMENT : /payments/**
+
+'=====================
+' DATABASE CONNECTIONS
+'=====================
+AUTH --> AUTH_DB
+PRODUCT --> PRODUCT_DB
+ORDER --> ORDER_DB
+PAYMENT --> PAYMENT_DB
+
+'=====================
+' INTER-SERVICE COMMUNICATION
+'=====================
+ORDER --> PRODUCT : Check stock\nGet product info
+ORDER --> PAYMENT : Create payment request
+PAYMENT --> ORDER : Update payment status
+
+note bottom of AUTH
+Auth:
+- Register/Login
+- JWT + Role
+end note
+
+note bottom of PRODUCT
+Product:
+- CRUD product/category
+- Upload image
+- Stock
+end note
+
+note bottom of ORDER
+Order:
+- Create order
+- Status: NEW/PAID/CANCEL
+end note
+
+note bottom of PAYMENT
+Payment:
+- COD/BANK
+- PENDING/SUCCESS/FAILED
+end note
+
+@enduml

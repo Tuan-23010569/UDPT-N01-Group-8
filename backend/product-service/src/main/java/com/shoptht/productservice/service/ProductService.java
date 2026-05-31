@@ -137,6 +137,13 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    // 7. Get By ID (Lấy chi tiết 1 sản phẩm)
+    public ProductResponse getProductById(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        return mapToProductResponse(product);
+    }
+
     // --- HELPER METHOD QUAN TRỌNG (ĐÃ SỬA LỖI NULL) ---
     private ProductResponse mapToProductResponse(Product product) {
         List<ProductResponse.VariantResponse> variantResponses = new ArrayList<>();

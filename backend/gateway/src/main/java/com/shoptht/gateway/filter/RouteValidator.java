@@ -20,7 +20,8 @@ public class RouteValidator {
             "/products/filter" ,
             "/categories" ,
             "/payments/vn-pay-callback", 
-                "/payments/ipn"   // <--- THÊM DÒNG NÀY (Cho phép lọc)
+            "/payments/ipn",
+            "/products/reviews"   // <--- Cập nhật đường dẫn cho review
             // Lưu ý: Nếu muốn cho phép POST/PUT/DELETE (Admin) mà không cần token
             // thì thêm "/products" là đủ, nhưng thực tế Admin nên cần Token.
             // Ở giai đoạn dev này, ta tạm mở ra để test.

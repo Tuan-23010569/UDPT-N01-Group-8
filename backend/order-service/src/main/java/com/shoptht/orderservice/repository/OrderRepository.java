@@ -7,5 +7,5 @@ import com.shoptht.orderservice.entity.Order;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    List<Order> findByCustomerEmailOrderByOrderDateDesc(String email);
+    List<Order> findByCustomerEmailOrCustomerNameOrderByOrderDateDesc(String email, String name);
 }

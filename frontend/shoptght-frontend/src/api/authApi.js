@@ -1,15 +1,25 @@
 import axiosClient from './axiosClient';
 
 const authApi = {
-  register(data) {
-    return axiosClient.post('/auth/register', data);
-  },
-  login(data) {
+  login: (data) => {
     return axiosClient.post('/auth/token', data);
   },
-  validate(token) {
-    return axiosClient.get(`/auth/validate?token=${token}`);
-  }
+
+  register: (data) => {
+    return axiosClient.post('/auth/register', data);
+  },
+
+  // --- DÀNH CHO ADMIN ---
+
+  // Lấy danh sách tất cả user
+  getAllUsers: () => {
+    return axiosClient.get('/auth/users/admin/all');
+  },
+
+  // Khóa hoặc mở khóa tài khoản
+  toggleLock: (userId) => {
+    return axiosClient.put(`/auth/users/admin/${userId}/lock`);
+  },
 };
 
 export default authApi;

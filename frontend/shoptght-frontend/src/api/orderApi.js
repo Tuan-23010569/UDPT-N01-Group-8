@@ -18,8 +18,20 @@ const orderApi = {
   // 3. Lấy lịch sử đơn hàng của tôi (MỚI THÊM)
   // Gọi API: /orders/history?email=...
   getMyOrders(email) {
+    // Lấy thêm name phòng trường hợp tài khoản không có email
+    const userStr = localStorage.getItem('user');
+    const user = userStr ? JSON.parse(userStr) : null;
+    const name = user ? (user.name || user.fullName) : '';
+
     return axiosClient.get('/orders/history', {
-        params: { email: email }
+        params: { email: email || '', name: name || '' }
+    });
+  },
+
+  // Lấy lịch sử đơn hàng theo email (cho Admin)
+  getHistoryByEmail(email, name) {
+    return axiosClient.get('/orders/history', {
+        params: { email: email || '', name: name || '' }
     });
   },
 

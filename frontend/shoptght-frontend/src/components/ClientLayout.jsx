@@ -91,7 +91,7 @@ const ClientLayout = () => {
                       <div className="px-2 pb-3 mb-2 border-b border-gray-100">
                           <p className="text-xs text-gray-500">Xin chào,</p>
                           <p className="font-bold text-base text-blue-600">
-                              {role === 'ADMIN' ? 'Quản Trị Viên' : 'Thành Viên Coolmate'}
+                              {role === 'ADMIN' ? 'Quản Trị Viên' : 'Thành Viên SHOPTHT'}
                           </p>
                       </div>
 
