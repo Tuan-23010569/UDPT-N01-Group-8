@@ -31,6 +31,7 @@ import Dashboard from './pages/Dashboard';
 import MyOrders from './pages/MyOrders';
 import ProductDetail from './pages/ProductDetail';
 import ReviewManager from './pages/ReviewManager';
+import Profile from './pages/Profile'; // <--- Import trang Profile mới tạo
 import CustomerManager from './pages/CustomerManager';
 import Chatbox from './components/Chatbox'; // <--- Thêm import Chatbox
 
@@ -81,6 +82,7 @@ function App() {
              <Route path="/my-orders" element={<MyOrders />} />
              
              <Route path="/product/:id" element={<ProductDetail />} />
+             <Route path="/profile" element={<Profile />} /> {/* <--- Khai báo Route */}
           </Route>
 
         </Routes>

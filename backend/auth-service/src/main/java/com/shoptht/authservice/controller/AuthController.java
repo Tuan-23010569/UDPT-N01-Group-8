@@ -92,4 +92,26 @@ public class AuthController {
                     .body("Lỗi Server: " + e.getMessage() + " (Vui lòng xem log ở Backend)");
         }
     }
+
+    // --- 3. API CẬP NHẬT THÔNG TIN CÁ NHÂN (PROFILE) ---
+    @PutMapping("/users/profile/{id}")
+    public ResponseEntity<?> updateProfile(@PathVariable int id, @RequestBody User updatedInfo) {
+        try {
+            User existingUser = userRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+            
+            // Cập nhật các trường thông tin (kiểm tra null để tránh ghi đè mất dữ liệu cũ)
+            if (updatedInfo.getName() != null && !updatedInfo.getName().isEmpty()) {
+                existingUser.setName(updatedInfo.getName());
+            }
+            if (updatedInfo.getEmail() != null && !updatedInfo.getEmail().isEmpty()) {
+                existingUser.setEmail(updatedInfo.getEmail());
+            }
+            
+            User savedUser = userRepository.save(existingUser);
+            return ResponseEntity.ok(savedUser); // Trả về user mới để Frontend cập nhật lại localStorage
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi: " + e.getMessage());
+        }
+    }
 }

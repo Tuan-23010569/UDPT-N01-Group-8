@@ -87,7 +87,7 @@ const CustomerManager = () => {
                 {users.map((user) => (
                 <tr key={user.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 font-bold text-gray-600">#{user.id}</td>
-                    <td className="px-4 py-3 font-medium">{user.fullName || 'Chưa đặt tên'}</td>
+                    <td className="px-4 py-3 font-medium">{user.name || user.fullName || 'Chưa đặt tên'}</td>
                     <td className="px-4 py-3 text-gray-500 text-sm">{user.email}</td>
                     <td className="px-4 py-3 text-center">
                         {user.locked ? (
@@ -124,7 +124,7 @@ const CustomerManager = () => {
           <div className="w-1/3 bg-white rounded-lg shadow-sm p-6 overflow-y-auto border-l border-gray-100">
               <div className="flex justify-between items-start mb-6 border-b pb-4">
                   <div>
-                      <h3 className="text-lg font-bold text-gray-800">{selectedUser.fullName || 'User #' + selectedUser.id}</h3>
+                      <h3 className="text-lg font-bold text-gray-800">{selectedUser.name || selectedUser.fullName || 'User #' + selectedUser.id}</h3>
                       <p className="text-sm text-gray-500">{selectedUser.email}</p>
                   </div>
                   <button onClick={() => setSelectedUser(null)} className="text-gray-400 hover:text-red-500 text-sm font-medium">Đóng</button>

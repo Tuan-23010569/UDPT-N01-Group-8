@@ -10,6 +10,43 @@ const Chatbox = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
+  // --- State hỗ trợ kéo thả (Drag & Drop) ---
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartRef = useRef({ x: 0, y: 0 });
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    dragStartRef.current = {
+      x: e.clientX - position.x,
+      y: e.clientY - position.y
+    };
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isDragging) return;
+      setPosition({
+        x: e.clientX - dragStartRef.current.x,
+        y: e.clientY - dragStartRef.current.y
+      });
+    };
+    const handleMouseUp = () => setIsDragging(false);
+
+    if (isDragging) {
+      document.body.style.userSelect = 'none'; // Chống bôi đen text khi kéo
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    } else {
+      document.body.style.userSelect = '';
+    }
+    return () => {
+      document.body.style.userSelect = '';
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging]);
+
   // Tự động cuộn xuống tin nhắn mới nhất
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -67,7 +104,10 @@ const Chatbox = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div 
+      className="fixed bottom-6 right-6 z-50"
+      style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
+    >
       {/* Nút mở Chatbox */}
       {!isOpen && (
         <button
@@ -80,9 +120,12 @@ const Chatbox = () => {
 
       {/* Cửa sổ Chat */}
       {isOpen && (
-        <div className="bg-white w-80 sm:w-96 rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5">
+        <div className="bg-white w-80 sm:w-96 h-[500px] rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5">
           {/* Header */}
-          <div className="bg-blue-600 text-white p-4 flex justify-between items-center">
+          <div 
+            className="bg-blue-600 text-white p-4 flex justify-between items-center cursor-move"
+            onMouseDown={handleMouseDown}
+          >
             <div className="flex items-center gap-2">
               <Bot size={24} />
               <div>
@@ -92,13 +135,17 @@ const Chatbox = () => {
                 </p>
               </div>
             </div>
-            <button onClick={() => setIsOpen(false)} className="text-white hover:text-gray-200">
+            <button 
+              onMouseDown={(e) => e.stopPropagation()} // Ngăn kéo khi bấm nút đóng
+              onClick={() => setIsOpen(false)} 
+              className="text-white hover:text-gray-200"
+            >
               <X size={20} />
             </button>
           </div>
 
           {/* Nội dung Chat */}
-          <div className="flex-1 p-4 bg-gray-50 h-80 overflow-y-auto flex flex-col gap-3">
+          <div className="flex-1 p-4 bg-gray-50 overflow-y-auto flex flex-col gap-3 pr-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400">
             {messages.map((msg, index) => (
               <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[80%] p-3 rounded-2xl text-sm shadow-sm ${

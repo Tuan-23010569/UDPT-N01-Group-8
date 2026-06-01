@@ -8,6 +8,7 @@ const ClientLayout = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState('USER');
+  const [userName, setUserName] = useState('Thành Viên SHOPTHT');
   const [keyword, setKeyword] = useState('');
 
   // 2. LẤY SỐ LƯỢNG TỪ CONTEXT
@@ -16,10 +17,21 @@ const ClientLayout = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const savedRole = localStorage.getItem('role');
+    const userStr = localStorage.getItem('user');
     
     if (token) {
         setIsLoggedIn(true);
         if (savedRole) setRole(savedRole);
+
+        // Parse thông tin user để lấy tên
+        if (userStr) {
+            try {
+                const user = JSON.parse(userStr);
+                if (user && user.name) setUserName(user.name);
+            } catch (error) {
+                console.error("Lỗi đọc thông tin user:", error);
+            }
+        }
     }
   }, []);
 
@@ -91,7 +103,7 @@ const ClientLayout = () => {
                       <div className="px-2 pb-3 mb-2 border-b border-gray-100">
                           <p className="text-xs text-gray-500">Xin chào,</p>
                           <p className="font-bold text-base text-blue-600">
-                              {role === 'ADMIN' ? 'Quản Trị Viên' : 'Thành Viên SHOPTHT'}
+                              {role === 'ADMIN' ? 'Quản Trị Viên' : userName}
                           </p>
                       </div>
 

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, LogOut, CreditCard, MessageSquare, Users } from 'lucide-react'; 
+import { LayoutDashboard, Package, ShoppingCart, LogOut, CreditCard, MessageSquare, Users, Store } from 'lucide-react'; 
 import { toast } from 'react-toastify';
 
 const AdminLayout = () => {
@@ -84,6 +84,9 @@ const AdminLayout = () => {
         <header className="h-16 bg-white shadow-sm flex items-center px-8 justify-between sticky top-0 z-10 shrink-0">
           <h2 className="text-lg font-bold text-gray-700">Hệ thống quản trị</h2>
           <div className="flex items-center gap-4">
+              <Link to="/" className="flex items-center gap-2 text-sm font-bold text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors mr-2 border border-blue-200">
+                 <Store size={18} /> Xem cửa hàng
+              </Link>
               <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold shadow-md">A</div>
               <span className="text-sm font-medium text-gray-600">Admin User</span>
           </div>

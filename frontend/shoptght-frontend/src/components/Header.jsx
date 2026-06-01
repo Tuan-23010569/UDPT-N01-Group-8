@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, User, Menu, X, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import AuthModal from './AuthModal';
@@ -75,11 +75,24 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const isLoggedIn = !!localStorage.getItem('token'); 
+  const [userName, setUserName] = useState('Member');
 
   const handleLogout = () => {
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('role');
       window.location.reload();
   };
+
+  useEffect(() => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        if (user && user.name) setUserName(user.name);
+      } catch (error) {}
+    }
+  }, []);
 
   return (
     <>
@@ -167,7 +180,7 @@ const Header = () => {
 
             {isLoggedIn ? (
                 <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-cool-blue cursor-pointer" onClick={handleLogout}>Member</span>
+                    <span className="text-sm font-bold text-cool-blue cursor-pointer" onClick={handleLogout}>{userName}</span>
                     {/* <button onClick={handleLogout} className="text-xs text-red-500 hover:underline">Thoát</button> */}
                 </div>
             ) : (

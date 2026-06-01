@@ -19,7 +19,7 @@ public class User {
     private String password;
     
     // Thêm Role để phân quyền (ví dụ: "ADMIN", "USER")
-    private String role; 
+    private String role = "USER"; 
 
     // Thêm trường để khóa tài khoản
     private boolean locked = false;
