@@ -17,6 +17,7 @@ import ProductForm from './pages/ProductForm';
 // --- Pages (Auth) ---
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 
 // --- Pages (Client) ---
 import Home from './pages/Home';
@@ -51,6 +52,7 @@ function App() {
           {/* --- ROUTE AUTH --- */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
           {/* --- ROUTE ADMIN --- */}
           <Route path="/admin" element={<AdminLayout />}>
@@ -66,23 +68,23 @@ function App() {
 
           {/* --- ROUTE CLIENT --- */}
           <Route path="/" element={<ClientLayout />}>
-             <Route index element={<Home />} />
-             
-             {/* Trang danh sách sản phẩm & lọc */}
-             <Route path="/collections" element={<Collection />} />
-             <Route path="/products" element={<Collection />} />
-             
-             {/* Trang tìm kiếm */}
-             <Route path="/search" element={<SearchResults />} />
-             
-             {/* Trang thanh toán & kết quả */}
-             <Route path="/checkout" element={<Checkout />} />
-             <Route path="/order-success/:id" element={<OrderSuccess />} />
-             <Route path="/payment/:orderId" element={<PaymentPage />} />
-             <Route path="/my-orders" element={<MyOrders />} />
-             
-             <Route path="/product/:id" element={<ProductDetail />} />
-             <Route path="/profile" element={<Profile />} /> {/* <--- Khai báo Route */}
+            <Route index element={<Home />} />
+
+            {/* Trang danh sách sản phẩm & lọc */}
+            <Route path="/collections" element={<Collection />} />
+            <Route path="/products" element={<Collection />} />
+
+            {/* Trang tìm kiếm */}
+            <Route path="/search" element={<SearchResults />} />
+
+            {/* Trang thanh toán & kết quả */}
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order-success/:id" element={<OrderSuccess />} />
+            <Route path="/payment/:orderId" element={<PaymentPage />} />
+            <Route path="/my-orders" element={<MyOrders />} />
+
+            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/profile" element={<Profile />} /> {/* <--- Khai báo Route */}
           </Route>
 
         </Routes>

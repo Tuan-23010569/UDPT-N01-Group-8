@@ -15,31 +15,31 @@ const LoginPage = () => {
     setLoading(true);
     try {
       const response = await authApi.login(formData);
-      
+
       // --- SỬA ĐOẠN NÀY ---
       // Backend mới trả về: { token: "...", user: { ... } }
-      
+
       if (response.token) {
         // 1. Lưu Token
         localStorage.setItem('token', response.token);
 
         // 2. Lưu User (QUAN TRỌNG: Để lấy email cho trang Lịch sử đơn)
         if (response.user) {
-            localStorage.setItem('user', JSON.stringify(response.user));
+          localStorage.setItem('user', JSON.stringify(response.user));
         }
 
         // 3. Logic điều hướng
         // Ưu tiên check role từ DB trả về, nếu không có thì check theo tên
         const role = response.user?.role || (formData.username.toLowerCase().includes('admin') ? 'ADMIN' : 'USER');
-        
+
         localStorage.setItem('role', role);
 
         if (role === 'ADMIN') {
-            toast.success('Xin chào Quản trị viên!');
-            navigate('/admin/products'); 
+          toast.success('Xin chào Quản trị viên!');
+          navigate('/admin/products');
         } else {
-            toast.success('Đăng nhập thành công!');
-            navigate('/'); 
+          toast.success('Đăng nhập thành công!');
+          navigate('/');
         }
       } else {
         toast.error('Lỗi phản hồi từ Server');
@@ -65,44 +65,44 @@ const LoginPage = () => {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-1">Tên đăng nhập</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               required
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all"
               placeholder="Nhập username..."
               value={formData.username}
-              onChange={(e) => setFormData({...formData, username: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
             />
           </div>
 
           <div className="relative">
             <div className="flex justify-between mb-1">
-                <label className="block text-sm font-bold text-gray-700">Mật khẩu</label>
-                <a href="#" className="text-xs text-blue-600 hover:underline">Quên mật khẩu?</a>
+              <label className="block text-sm font-bold text-gray-700">Mật khẩu</label>
+              <Link to="/forgot-password" className="text-xs text-blue-600 hover:underline">Quên mật khẩu?</Link>
             </div>
-            <input 
+            <input
               type={showPass ? "text" : "password"}
               required
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all"
               placeholder="••••••••"
               value={formData.password}
-              onChange={(e) => setFormData({...formData, password: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             />
-            <button 
-                type="button"
-                onClick={() => setShowPass(!showPass)}
-                className="absolute right-3 top-[34px] text-gray-400 hover:text-gray-600"
+            <button
+              type="button"
+              onClick={() => setShowPass(!showPass)}
+              className="absolute right-3 top-[34px] text-gray-400 hover:text-gray-600"
             >
-                {showPass ? <EyeOff size={20}/> : <Eye size={20}/>}
+              {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
 
-          <button 
+          <button
             disabled={loading}
             className="w-full bg-black text-white font-bold py-3.5 rounded-lg hover:opacity-80 transition-opacity flex items-center justify-center gap-2"
           >
             {loading ? 'Đang xử lý...' : (
-                <>ĐĂNG NHẬP <ArrowRight size={20}/></>
+              <>ĐĂNG NHẬP <ArrowRight size={20} /></>
             )}
           </button>
         </form>

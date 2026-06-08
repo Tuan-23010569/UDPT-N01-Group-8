@@ -1,10 +1,10 @@
 package com.shoptht.gateway.filter;
 
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.function.Predicate;
+
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.stereotype.Component;
 
 @Component
 public class RouteValidator {
@@ -13,14 +13,13 @@ public class RouteValidator {
     public static final List<String> openApiEndpoints = List.of(
             "/auth/register",
             "/auth/token",
+            "/auth/forgot-password", // <--- Thêm API quên mật khẩu
             "/auth/validate",
             "/eureka",
             "/products",           // <--- THÊM DÒNG NÀY (Cho phép xem danh sách)
             "/products/search",    // <--- THÊM DÒNG NÀY (Cho phép tìm kiếm)
             "/products/filter" ,
             "/categories" ,
-            "/payments/vn-pay-callback", 
-            "/payments/ipn",
             "/products/reviews"   // <--- Cập nhật đường dẫn cho review
             // Lưu ý: Nếu muốn cho phép POST/PUT/DELETE (Admin) mà không cần token
             // thì thêm "/products" là đủ, nhưng thực tế Admin nên cần Token.

@@ -20,20 +20,20 @@ export const CartProvider = ({ children }) => {
   // --- HÀM THÊM VÀO GIỎ (ĐÃ SỬA LỖI) ---
   const addToCart = (product, variant, quantity = 1) => {
     if (!variant) {
-        toast.error("Sản phẩm này tạm hết hàng!");
-        return;
+      toast.error("Sản phẩm này tạm hết hàng!");
+      return;
     }
 
     // A. XỬ LÝ SIDE EFFECT (Thông báo) TRƯỚC HOẶC SAU KHI SET STATE
     // Chúng ta kiểm tra nhanh trên cartItems hiện tại để hiện thông báo
     const isExist = cartItems.some(
-        item => item.id === product.id && item.color === variant.color && item.size === variant.size
+      item => item.id === product.id && item.color === variant.color && item.size === variant.size
     );
 
     if (isExist) {
-        toast.success(`Đã tăng số lượng: ${product.name}`);
+      toast.success(`Đã tăng số lượng: ${product.name}`);
     } else {
-        toast.success("Đã thêm vào giỏ hàng!");
+      toast.success("Đã thêm vào giỏ hàng!");
     }
 
     // B. CẬP NHẬT STATE (Phải là hàm thuần túy, không gọi toast trong này)
@@ -50,13 +50,13 @@ export const CartProvider = ({ children }) => {
       } else {
         // Thêm mới
         const newItem = {
-            id: product.id,
-            name: product.name,
-            price: variant.price,
-            image: variant.imageUrl,
-            color: variant.color,
-            size: variant.size,
-            quantity: quantity
+          id: product.id,
+          name: product.name,
+          price: variant.price,
+          image: variant.imageUrl,
+          color: variant.color,
+          size: variant.size,
+          quantity: quantity
         };
         return [...prevItems, newItem];
       }
@@ -69,11 +69,49 @@ export const CartProvider = ({ children }) => {
     toast.info("Đã xóa sản phẩm khỏi giỏ");
   };
 
+  // --- HÀM TĂNG SỐ LƯỢNG (cho trang Checkout) ---
+  const increaseQuantity = (productId, color, size) => {
+    setCartItems(prevItems =>
+      prevItems.map(item =>
+        (item.id === productId && item.color === color && item.size === size)
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      )
+    );
+  };
+
+  // --- HÀM GIẢM SỐ LƯỢNG (cho trang Checkout) ---
+  const decreaseQuantity = (productId, color, size) => {
+    setCartItems(prevItems => {
+      const existingItem = prevItems.find(item => item.id === productId && item.color === color && item.size === size);
+
+      // Nếu chỉ còn 1 sản phẩm, giảm số lượng sẽ xóa nó đi
+      if (existingItem && existingItem.quantity === 1) {
+        toast.info("Đã xóa sản phẩm khỏi giỏ");
+        return prevItems.filter(item => !(item.id === productId && item.color === color && item.size === size));
+      }
+
+      // Ngược lại, chỉ giảm số lượng
+      return prevItems.map(item =>
+        (item.id === productId && item.color === color && item.size === size)
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      );
+    });
+  };
+
+  // --- HÀM DỌN SẠCH GIỎ HÀNG (dùng sau khi đặt hàng thành công) ---
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   // --- TÍNH TỔNG SỐ LƯỢNG ---
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+  // --- TÍNH TỔNG TIỀN ---
+  const totalAmount = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, totalItems }}>
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, increaseQuantity, decreaseQuantity, clearCart, totalItems, totalAmount }}>
       {children}
     </CartContext.Provider>
   );
